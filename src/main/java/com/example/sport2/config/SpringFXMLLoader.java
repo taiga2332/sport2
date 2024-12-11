@@ -10,15 +10,21 @@ import java.net.URL;
 @Component
 public class SpringFXMLLoader {
 
-    private final ApplicationContext applicationContext;
+    private final ApplicationContext context;
 
-    public SpringFXMLLoader(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public SpringFXMLLoader(ApplicationContext context) {
+        this.context = context;
     }
 
     public FXMLLoader load(URL url) {
         FXMLLoader loader = new FXMLLoader(url);
-        loader.setControllerFactory(applicationContext::getBean); // Встановлення контролерів через Spring
+        loader.setControllerFactory(context::getBean);
         return loader;
+    }
+
+    public <T> T loadAndReturnController(URL url) throws IOException {
+        FXMLLoader loader = load(url);
+        loader.load();
+        return loader.getController();
     }
 }

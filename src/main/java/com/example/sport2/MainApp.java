@@ -43,15 +43,16 @@ public class MainApp extends Application {
         }
     }
 
-    public void loadSceneWithRole(String fxmlPath, String title, int width, int height, Role role) {
+    public <T> T loadSceneWithRole(String fxmlPath, String title, int width, int height, Role role) {
         try {
             SpringFXMLLoader loader = context.getBean(SpringFXMLLoader.class);
             FXMLLoader fxmlLoader = loader.load(getClass().getResource(fxmlPath));
             Scene scene = new Scene(fxmlLoader.load(), width, height);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
-            // Передаємо роль у контролер
-            Object controller = fxmlLoader.getController();
+            T controller = fxmlLoader.getController(); // Отримуємо контролер
+
+            // Передаємо роль у контролер, якщо це головний контролер
             if (controller instanceof com.example.sport2.ui.controllers.MainController mainController) {
                 mainController.setUserRole(role);
             }
@@ -59,10 +60,15 @@ public class MainApp extends Application {
             primaryStage.setTitle(title);
             primaryStage.setScene(scene);
             primaryStage.show();
+
+            return controller; // Повертаємо контролер
         } catch (IOException e) {
             e.printStackTrace();
+            return null; // Якщо виникла помилка
         }
     }
+
+
 
     public static MainApp getInstance() {
         return instance; // Повертаємо інстанс

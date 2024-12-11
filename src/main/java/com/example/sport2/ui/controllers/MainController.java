@@ -29,8 +29,15 @@ public class MainController {
 
     @FXML
     public void viewOrders() {
-        MainApp.getInstance().loadScene("/fxml/orders.fxml", "Список замовлень", 800, 600);
+        OrdersController ordersController = MainApp.getInstance()
+                .loadSceneWithRole("/fxml/orders.fxml", "Список замовлень", 800, 600, userRole);
+
+        if (ordersController != null) {
+            ordersController.setUserRole(userRole);
+        }
     }
+
+
 
     @FXML
     public void manageUsers() {

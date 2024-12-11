@@ -1,6 +1,7 @@
 package com.example.sport2.ui.controllers;
 
 import com.example.sport2.MainApp;
+import com.example.sport2.enums.Role;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrdersController {
+
+    private Role userRole;
 
     @FXML
     private TableView<Order> ordersTable;
@@ -23,21 +26,19 @@ public class OrdersController {
     @FXML
     private TableColumn<Order, String> statusColumn;
 
+    public void setUserRole(Role role) {
+        this.userRole = role;
+    }
+
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         orderNameColumn.setCellValueFactory(new PropertyValueFactory<>("orderName"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-
-        ordersTable.getItems().addAll(
-                new Order(1L, "Замовлення 1", "Виконано"),
-                new Order(2L, "Замовлення 2", "Очікує"),
-                new Order(3L, "Замовлення 3", "Скасовано")
-        );
     }
 
     @FXML
     public void goBack() {
-        MainApp.getInstance().loadScene("/fxml/main.fxml", "Головне меню", 800, 600);
+        MainApp.getInstance().loadSceneWithRole("/fxml/main.fxml", "Головне меню", 800, 600, userRole);
     }
 }
