@@ -25,6 +25,8 @@ public class UserService {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
+    // Реєстрація нового користувача через DTO
     public void registerUser(UserDTO userDTO) {
         if (userRepository.findByUsername(userDTO.getUsername()).isPresent()) {
             throw new IllegalArgumentException("Користувач з таким ім'ям вже існує");
@@ -39,23 +41,27 @@ public class UserService {
 
         userRepository.save(user);
     }
+
+    // Реєстрація через запит
     public UserResponse register(CreateUserRequest request) {
         return createUser(request);
     }
 
+    // Отримання ролі користувача за іменем
     public String getUserRole(String username) {
         return userRepository.findByUsername(username)
                 .map(user -> user.getRole().toString())
                 .orElse("USER"); // Роль за замовчуванням
     }
 
+    // Аутентифікація користувача
     public User authenticateAndReturnUser(String username, String password) {
         return userRepository.findByUsername(username)
                 .filter(user -> passwordEncoder.matches(password, user.getPassword()))
                 .orElse(null);
     }
 
-
+    // Додавання нового користувача
     public UserResponse createUser(CreateUserRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email is already in use.");
@@ -65,24 +71,27 @@ public class UserService {
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(request.getRole() != null ? request.getRole() : Role.CLIENT);
+        user.setRole(request.getRole() != null ? request.getRole() : Role.USER);
         user.setActive(true);
 
         User savedUser = userRepository.save(user);
         return new UserResponse(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail());
     }
 
+    // Отримання користувача за ID
     public Optional<UserResponse> getUserById(Long id) {
         return userRepository.findById(id)
                 .map(user -> new UserResponse(user.getId(), user.getUsername(), user.getEmail()));
     }
 
+    // Отримання всіх користувачів
     public List<UserResponse> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(user -> new UserResponse(user.getId(), user.getUsername(), user.getEmail()))
                 .collect(Collectors.toList());
     }
 
+    // Оновлення даних користувача
     public UserResponse updateUser(Long id, CreateUserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -103,9 +112,20 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+    public void saveUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Шифрування паролю
+        userRepository.save(user);
+    }
+
+
+
+    // Перевірка автентифікації
     public boolean authenticate(String username, String password) {
         return userRepository.findByUsername(username)
-                .map(user -> user.getPassword().equals(password)) // Перевіряємо пароль
-                .orElse(false); // Якщо користувача не знайдено
+                .map(user -> passwordEncoder.matches(password, user.getPassword()))
+                .orElse(false);
     }
 }

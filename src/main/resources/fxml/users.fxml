@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.sport2.ui.controllers.UsersController"
+            styleClass="root">
+    <children>
+        <VBox alignment="CENTER" spacing="15" styleClass="center-pane" layoutX="100" layoutY="50">
+            <Label text="Управління користувачами" styleClass="label-header"/>
+
+            <TableView fx:id="usersTable" styleClass="table">
+                <columns>
+                    <TableColumn text="ID" fx:id="idColumn"/>
+                    <TableColumn text="Ім'я користувача" fx:id="usernameColumn"/>
+                    <TableColumn text="Email" fx:id="emailColumn"/>
+                    <TableColumn text="Роль" fx:id="roleColumn"/>
+                </columns>
+            </TableView>
+
+            <HBox spacing="10" alignment="CENTER">
+                <TextField fx:id="usernameField" promptText="Ім'я користувача" styleClass="text-field"/>
+                <TextField fx:id="emailField" promptText="Email" styleClass="text-field"/>
+                <ChoiceBox fx:id="roleChoiceBox"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Додати" onAction="#addUser" styleClass="button"/>
+                <Button text="Оновити" onAction="#updateUser" styleClass="button"/>
+                <Button text="Видалити" onAction="#deleteUser" styleClass="button"/>
+            </HBox>
+
+            <Button text="Назад" onAction="#goBack" styleClass="button"/>
+
+        </VBox>
+    </children>
+</AnchorPane>

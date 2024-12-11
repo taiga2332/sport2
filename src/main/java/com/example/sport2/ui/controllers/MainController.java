@@ -19,6 +19,7 @@ public class MainController {
         updateUIBasedOnRole();
     }
 
+
     private void updateUIBasedOnRole() {
         if (userRole == Role.ADMIN) {
             adminButton.setVisible(true);
@@ -31,7 +32,6 @@ public class MainController {
     public void viewOrders() {
         OrdersController ordersController = MainApp.getInstance()
                 .loadSceneWithRole("/fxml/orders.fxml", "Список замовлень", 800, 600, userRole);
-
         if (ordersController != null) {
             ordersController.setUserRole(userRole);
         }
@@ -39,10 +39,17 @@ public class MainController {
 
 
 
+
     @FXML
     public void manageUsers() {
-        MainApp.getInstance().loadScene("/fxml/manageUsers.fxml", "Користувачі", 800, 600);
+        UsersController usersController = MainApp.getInstance()
+                .loadSceneWithRole("/fxml/users.fxml", "Керування користувачами", 800, 600, userRole);
+        if (usersController != null) {
+            usersController.setUserRole(userRole);
+        }
     }
+
+
 
     @FXML
     public void logout() {

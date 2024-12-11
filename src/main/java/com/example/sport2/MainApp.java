@@ -16,6 +16,15 @@ public class MainApp extends Application {
     private static ConfigurableApplicationContext context;
     private static MainApp instance; // Додаємо інстанс для доступу
     private Stage primaryStage;
+    private Role currentUserRole;
+
+    public Role getCurrentUserRole() {
+        return currentUserRole;
+    }
+
+    public void setCurrentUserRole(Role role) {
+        this.currentUserRole = role;
+    }
 
     @Override
     public void init() {
@@ -50,9 +59,8 @@ public class MainApp extends Application {
             Scene scene = new Scene(fxmlLoader.load(), width, height);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
 
-            T controller = fxmlLoader.getController(); // Отримуємо контролер
-
-            // Передаємо роль у контролер, якщо це головний контролер
+            // Передаємо роль у контролер
+            Object controller = fxmlLoader.getController();
             if (controller instanceof com.example.sport2.ui.controllers.MainController mainController) {
                 mainController.setUserRole(role);
             }
@@ -61,12 +69,13 @@ public class MainApp extends Application {
             primaryStage.setScene(scene);
             primaryStage.show();
 
-            return controller; // Повертаємо контролер
+            return (T) controller; // Повертаємо контролер
         } catch (IOException e) {
             e.printStackTrace();
-            return null; // Якщо виникла помилка
+            return null;
         }
     }
+
 
 
 
