@@ -1,18 +1,23 @@
 package com.example.sport2.entity;
 
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "orders")
 public class Order {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String orderName;
-    private String status;
 
-    public Order(Long id, String orderName, String status) {
-        this.id = id;
-        this.orderName = orderName;
-        this.status = status;
-    }
+    private String username; // Ім'я користувача, який створив замовлення
 
-    // Getters and Setters
+    private LocalDateTime dateTime; // Дата і час бронювання
+
+    private String status; // Статус замовлення (наприклад, "Підтверджено", "Скасовано")
+
+    // Геттери та сеттери
     public Long getId() {
         return id;
     }
@@ -21,12 +26,20 @@ public class Order {
         this.id = id;
     }
 
-    public String getOrderName() {
-        return orderName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setOrderName(String orderName) {
-        this.orderName = orderName;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getStatus() {
