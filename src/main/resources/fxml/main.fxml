@@ -1,0 +1,17 @@
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<AnchorPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.sport2.ui.controllers.MainController"
+            styleClass="root">
+    <children>
+        <VBox alignment="CENTER" spacing="15" styleClass="center-pane">
+            <Label text="Головне меню" styleClass="label-header"/>
+            <Button text="Переглянути замовлення" onAction="#viewOrders" styleClass="button"/>
+            <Button text="Керувати користувачами" fx:id="adminButton" onAction="#manageUsers" styleClass="button" visible="false"/>
+            <Button text="Вийти" onAction="#logout" styleClass="button"/>
+        </VBox>
+    </children>
+</AnchorPane>

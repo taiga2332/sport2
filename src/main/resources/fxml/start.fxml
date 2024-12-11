@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.sport2.ui.controllers.StartController"
+            styleClass="root">
+    <children>
+        <VBox alignment="CENTER" spacing="15" styleClass="center-pane" layoutX="250" layoutY="150">
+            <Label text="Ласкаво просимо" styleClass="label-header"/>
+            <Button text="Увійти" onAction="#goToLogin" styleClass="button"/>
+            <Button text="Реєстрація" onAction="#goToRegistration" styleClass="button"/>
+        </VBox>
+    </children>
+</AnchorPane>

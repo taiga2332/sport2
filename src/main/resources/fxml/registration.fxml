@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.sport2.ui.controllers.RegistrationControllerUi"
+            styleClass="root">
+    <children>
+        <VBox alignment="CENTER" spacing="15" styleClass="center-pane" layoutX="250" layoutY="100">
+            <Label text="Реєстрація" styleClass="label-header"/>
+            <TextField fx:id="usernameField" promptText="Ім'я користувача" styleClass="text-field"/>
+            <PasswordField fx:id="passwordField" promptText="Пароль" styleClass="password-field"/>
+            <TextField fx:id="emailField" promptText="Електронна пошта" styleClass="text-field"/>
+            <ChoiceBox fx:id="roleChoiceBox"/>
+            <Button text="Зареєструватись" onAction="#registerUser" styleClass="button"/>
+            <Label fx:id="successLabel" style="-fx-text-fill: green;"/>
+        </VBox>
+    </children>
+</AnchorPane>
