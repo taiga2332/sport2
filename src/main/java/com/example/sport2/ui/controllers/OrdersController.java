@@ -1,5 +1,6 @@
 package com.example.sport2.ui.controllers;
 
+import com.example.sport2.MainApp;
 import com.example.sport2.entity.Order;
 import com.example.sport2.enums.Role;
 import com.example.sport2.service.OrderService;
@@ -8,10 +9,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.List;
 
 @Component
 public class OrdersController {
@@ -48,6 +52,7 @@ public class OrdersController {
     public OrdersController(OrderService orderService) {
         this.orderService = orderService;
     }
+
     public void setUserRole(Role role) {
         this.userRole = role;
     }
@@ -62,16 +67,47 @@ public class OrdersController {
     }
 
     private void loadOrders() {
-        orderList = FXCollections.observableArrayList(orderService.getOrdersByUsername("currentUser")); // Замініть "currentUser" на реального користувача
+        String currentUser = getCurrentUsername();
+        Role role = MainApp.getInstance().getCurrentUserRole(); // Отримуємо роль
+
+        List<Order> orders;
+        if (role == Role.ADMIN) {
+            orders = orderService.getAllOrders(); // Всі замовлення
+        } else {
+            if (currentUser == null || currentUser.isEmpty()) {
+                showAlert("Не вдалося отримати ім'я користувача!");
+                return;
+            }
+            orders = orderService.getOrdersByUsername(currentUser); // Лише свої замовлення
+        }
+
+        orderList = FXCollections.observableArrayList(orders);
         ordersTable.setItems(orderList);
     }
+
 
     @FXML
     public void addOrder() {
         try {
+            if (dateTimeField.getText().isEmpty()) {
+                showAlert("Поле дати та часу не може бути порожнім!");
+                return;
+            }
+
             LocalDateTime dateTime = LocalDateTime.parse(dateTimeField.getText(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
-            orderService.createOrder("currentUser", dateTime); // Замініть "currentUser" на реального користувача
+
+            String currentUser = getCurrentUsername();
+            if (currentUser == null || currentUser.isEmpty()) {
+                showAlert("Не вдалося отримати ім'я користувача!");
+                return;
+            }
+
+            orderService.createOrder(currentUser, currentUser, dateTime);
+
             loadOrders();
+            dateTimeField.clear();
+        } catch (DateTimeParseException e) {
+            showAlert("Невірний формат дати та часу! Використовуйте формат: yyyy-MM-dd HH:mm");
         } catch (Exception e) {
             showAlert("Помилка: " + e.getMessage());
         }
@@ -111,4 +147,18 @@ public class OrdersController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+    private String getCurrentUsername() {
+        try {
+            var authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication == null || !authentication.isAuthenticated()) {
+                return null; // Користувач не авторизований
+            }
+            return authentication.getName();
+        } catch (Exception e) {
+            System.err.println("Помилка отримання імені користувача: " + e.getMessage());
+            return null;
+        }
+    }
+
 }

@@ -22,13 +22,23 @@ public class OrderService {
         return orderRepository.findByUsername(username);
     }
 
-    public Order createOrder(String username, LocalDateTime dateTime) {
-        Order order = new Order();
-        order.setUsername(username);
-        order.setDateTime(dateTime);
-        order.setStatus("Підтверджено");
-        return orderRepository.save(order);
+    public void createOrder(String clientName, String username, LocalDateTime dateTime) {
+        if (clientName == null || clientName.isEmpty()) {
+            throw new IllegalArgumentException("Ім'я клієнта не може бути порожнім!");
+        }
+        Order newOrder = new Order();
+        newOrder.setClientName(clientName);
+        newOrder.setUsername(username);
+        newOrder.setDateTime(dateTime);
+        newOrder.setStatus("Підтверджено");
+        orderRepository.save(newOrder);
     }
+
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+
 
     public Order updateOrder(Long id, LocalDateTime newDateTime) {
         Order order = orderRepository.findById(id)

@@ -17,10 +17,23 @@ public class Order {
 
     private String status; // Статус замовлення (наприклад, "Підтверджено", "Скасовано")
 
+    @Column(name = "client_name", nullable = false)
+    private String clientName;
+
+    // Геттери та сеттери
+    public String getClientName() {
+        return clientName;
+    }
+
     // Геттери та сеттери
     public Long getId() {
         return id;
     }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
+
 
     public void setId(Long id) {
         this.id = id;

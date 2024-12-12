@@ -28,7 +28,7 @@ public class LoginController {
         User authenticatedUser = userService.authenticateAndReturnUser(username, password);
 
         if (authenticatedUser != null) {
-            // Використовуємо інстанс MainApp для виклику loadSceneWithRole
+            MainApp.getInstance().setCurrentUserRole(authenticatedUser.getRole()); // Зберігаємо роль
             MainApp.getInstance().loadSceneWithRole(
                     "/fxml/main.fxml",
                     "Головна сторінка",
@@ -40,4 +40,5 @@ public class LoginController {
             System.out.println("Невірний логін або пароль!");
         }
     }
+
 }
